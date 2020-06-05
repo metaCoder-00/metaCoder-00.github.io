@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.72.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="蒿蚝好昊">
+<meta name="keywords" content="最大似然">
+<meta name="description" content="
+    最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。">
+
+
+<meta property="og:description" content="
+    最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单脉冲测向中的最大似然方法">
+<meta name="twitter:title" content="单脉冲测向中的最大似然方法">
+<meta property="og:url" content="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+<meta property="twitter:url" content="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+<meta property="og:site_name" content="蒿蚝好昊">
+<meta property="og:description" content="
+    最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。">
+<meta name="twitter:description" content="
+    最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。">
+<meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2020-06-05T20:14:05">
+  
+  
+    <meta property="article:modified_time" content="2020-06-05T20:14:05">
+  
+  
+  
+    
+      <meta property="article:section" content="阵列信号处理">
+    
+  
+  
+    
+      <meta property="article:tag" content="单脉冲">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg">
+
+
+    <title>单脉冲测向中的最大似然方法</title>
+
+    <link rel="icon" href="https://hopesaccount.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://hopesaccount.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hopesaccount.github.io/">蒿蚝好昊</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hopesaccount.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hopesaccount.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">蒿蚝好昊</h4>
+        
+          <h5 class="sidebar-profile-bio">蒿蚝好昊的<strong>胡扯</strong>频道</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hopesaccount.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hopesaccount.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hopesaccount.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hopesaccount.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hopesaccount.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/metaCoder-00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      单脉冲测向中的最大似然方法
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-06-05T20:14:05&#43;08:00">
+        
+  
+  
+  
+  
+    2020 年 6 月 5 日
+  
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://hopesaccount.github.io/categories/%e9%98%b5%e5%88%97%e4%bf%a1%e5%8f%b7%e5%a4%84%e7%90%86">阵列信号处理</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <!-- raw HTML omitted -->
+<p>    最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。</p>
+<h2 id="最大似然角度估计的模型建立">最大似然角度估计的模型建立</h2>
+<p>    首先，假设阵元个数为 \(M\)，我们考虑阵列接收信号的模型为
+$$\boldsymbol{z}=b\boldsymbol{a}(\theta)+\boldsymbol{n} \tag{1}$$
+上式中，复数 \(b\) 表示信源的复振幅，向量 \(\boldsymbol{a}(\theta)\in\mathbb{C}^{M \times 1}\) 表示入射角度为 \(\theta\) 的导向向量，向量 \(\boldsymbol{n}\in\mathbb{C}^{M \times 1}\) 表示各接收阵元的噪声（或干扰叠加噪声），向量 \(\boldsymbol{z}\in\mathbb{C}^{M \times 1}\) 表示个阵元接收到的数据。
+    若假设噪声向量服从复高斯分布 \(\boldsymbol{n}\sim\mathcal{CN}(0,\boldsymbol{Q})\) 则可知阵列接收数据的概率分布为 \(\boldsymbol{z}\sim\mathcal{CN}(b\boldsymbol{a}(\theta),\boldsymbol{Q})\)，进一步我们可以得到其概率密度函数为
+$$p(\boldsymbol{z}|\theta,b)=\pi^{-M}|Q|^{-1}\exp\left[-[\boldsymbol{z}-b\boldsymbol{a}(\theta)]^H\boldsymbol{Q}^{-1}[\boldsymbol{z}-b\boldsymbol{a}(\theta)]\right] \tag{2}$$
+然后我们先对该密度函数取负对数似然，并去掉无关的常数部分，得到
+$$S(\theta,b)=-\mathcal{L}(\theta,b)=[\boldsymbol{z}-b\boldsymbol{a}(\theta)]^H\boldsymbol{Q}^{-1}[\boldsymbol{z}-b\boldsymbol{a}(\theta)] \tag{3}$$
+首先对上式中的参数 \(b\) 求最小二乘解得到
+$$b=[\boldsymbol{a}^H(\theta)\boldsymbol{Q}^{-1}\boldsymbol{a}(\theta)]^{-1}\boldsymbol{a}^H(\theta)\boldsymbol{Q}^{-1}\boldsymbol{z}$$
+将上式代入 \(S(\theta,b)\) 并去掉所有常数项，可得
+$$S(\theta)=\boldsymbol{z}^{H} \boldsymbol{Q}^{-1} \boldsymbol{a}(\theta)\left[\boldsymbol{a}^H(\theta) \boldsymbol{Q}^{-1} \boldsymbol{a}(\theta)\right]^{-1} \boldsymbol{a}^H(\theta) \boldsymbol{Q}^{-1} \boldsymbol{z} \tag{4}$$
+此时，我们可以定义自适应和波束权向量 \(\boldsymbol{w}(\theta)\) 为
+$$\boldsymbol{w}(\theta)=\left[\boldsymbol{a}^{H}(\theta) \boldsymbol{Q}^{-1} \boldsymbol{a}(\theta)\right]^{-1 / 2} \boldsymbol{Q}^{-1} \boldsymbol{a}(\theta) \tag{5}$$
+由此，可以将 \(S(\theta)\) 重写为
+$$S_\text{scan}(\theta)=|\boldsymbol{w}^H(\theta)\boldsymbol{z}|^2 \tag{6}$$
+上式称为最大似然意义下的自适应角度扫描方向图。</p>
+<h2 id="似然函数的求解">似然函数的求解</h2>
+<p>    接下来，我们令 \(F(\theta)=\ln[S_\text{scan}(\theta)]\)。这样，波达方向的估计值 \(\hat{\theta}\) 可由下式给出</p>
+<p>$$\hat{\theta}=\text{argmax}_\theta F(\theta) \tag{7}$$
+接着，本文的求解步骤可能会与原论文有些出入，但原理都是一样的。本文直接利用牛顿梯度法进行求解，即
+$$\boldsymbol{\theta}^{(\text{new})}=\boldsymbol{\theta}^{(\text{old})}-\boldsymbol{H}^{-1}\nabla F(\boldsymbol{\theta}) \tag{8}$$
+注意到，这里的待估计参数变为了向量 \(\boldsymbol{\theta}\)，这是因为，实际阵列的参考系可能是面阵这类含有不止一个角度变量的估计问题。上式中，\(\boldsymbol{H}=\nabla\nabla F(\boldsymbol{\theta})\) 是 \(F(\boldsymbol{\theta})\) 的海森矩阵。实际上，牛顿梯度法是在求原函数 \(F(\boldsymbol{\theta})\) 一阶导数的零点，而一阶导数的零点刚好对应原函数的极值点，关于牛顿迭代公式的导出，可以查看相应资料（如数值分析）。</p>
+<p>    我们以面阵为例，给出该条件下的表达式。首先设 \(\boldsymbol{\theta}=(u,v)^T\)，\(u\) 和 \(v\) 表示方位角和俯仰角的正（余）弦值。因此，我们将 \((8)\) 式改写为
+$$
+\begin{bmatrix}u \\\\ v\end{bmatrix}_{(\boldsymbol{\theta}^\star)}=
+\begin{bmatrix}u \\\\ v\end{bmatrix}
+-\begin{bmatrix}\frac{\partial^2F}{\partial u^2} &amp; \frac{\partial^2F}{\partial u\partial v} 
+\\\\ \frac{\partial^2F}{\partial v\partial v}  &amp; \frac{\partial^2F}{\partial v^2}\end{bmatrix}^{-1}
+\begin{bmatrix}\frac{\partial F}{\partial u} \\\\ \frac{\partial F}{\partial v}\end{bmatrix} \tag{9}
+$$</p>
+<p>上式中，\([\cdot]_{(\boldsymbol{\theta}^\star)}\) 表示新一轮的迭代值。在实际应用中，一般取初始值为波束指向 \(\boldsymbol{\theta}_0\)。</p>
+<p>    在本小节的最后，将直接给出式 \((9)\) 中各变量的表达式，详细的推导过程见参考文献。首先，给出 \(F(\boldsymbol{\theta})\) 的梯度表达式
+$$\frac{\partial F}{\partial u}=2\left[\Re\left(\frac{\boldsymbol{d}_x^H\boldsymbol{z}}{\boldsymbol{w}^H\boldsymbol{z}}\right)-\mu_x\right] \tag{10}$$
+$$\frac{\partial F}{\partial v}=2\left[\Re\left(\frac{\boldsymbol{d}_y^H\boldsymbol{z}}{\boldsymbol{w}^H\boldsymbol{z}}\right)-\mu_y\right] \tag{11}$$
+上式中，\(\boldsymbol{d}_x\) 和 \(\boldsymbol{d}_y\) 分别为 \(x\) 方向和 \(y\) 方向上的差波束（假设面阵法向量为 \(z\) 轴方向），其相应的表达式为
+$$\boldsymbol{d}_x=\frac{\boldsymbol{Q}^{-1}\partial\boldsymbol{a}/\partial u}{(\boldsymbol{a}^H\boldsymbol{Q}^{-1}\boldsymbol{a})^{1 / 2}}$$
+$$\boldsymbol{d}_y=\frac{\boldsymbol{Q}^{-1}\partial\boldsymbol{a}/\partial v}{(\boldsymbol{a}^H\boldsymbol{Q}^{-1}\boldsymbol{a})^{1 / 2}}$$
+式中，\(\partial\boldsymbol{a}/\partial u\) 和 \(\partial\boldsymbol{a}/\partial u\) 对应导向向量对方位角和俯仰角正（余）弦值的偏导数，其中面阵的导向向量为
+$$\boldsymbol{a}(u,v)=\begin{bmatrix}\exp[-j(2\pi/\lambda)(x_1u + y_1v) &amp; \cdots &amp; \exp[-j(2\pi/\lambda)(x_Mu + y_Mv)] \end{bmatrix}^T$$
+式中， \(M\) 为阵元个数，由此可得
+$$\left(\frac{\partial\boldsymbol{a}}{\partial u}\right)_i=-j(2\pi/x_i)\exp[-j(2\pi/\lambda)(x_iu + y_iv)]$$
+$$\left(\frac{\partial\boldsymbol{a}}{\partial v}\right)_i=-j(2\pi/y_i)\exp[-j(2\pi/\lambda)(x_iu + y_iv)]$$
+利用以上这些式子，可以求得差波束，而式 \((10)\) 和 \((11)\) 中，\(\mu_x\) 和 \(\mu_y\) 是两个方向上的偏差修正量，其公式如下
+$$\mu_x=\Re\left[\frac{(\partial \boldsymbol{a}/\partial u)^H\boldsymbol{Q}^{-1}\boldsymbol{a}}{\boldsymbol{a}^H\boldsymbol{Q}^{-1}\boldsymbol{a}}\right]$$
+$$\mu_y=\Re\left[\frac{(\partial \boldsymbol{a}/\partial v)^H\boldsymbol{Q}^{-1}\boldsymbol{a}}{\boldsymbol{a}^H\boldsymbol{Q}^{-1}\boldsymbol{a}}\right]$$
+上式中，\(\Re(\cdot)\) 表示取实部。这样，\(\nabla F(\boldsymbol{\theta})\) 就可以由上文中这些式子求出。</p>
+<p>    接下来是海森矩阵的求解，海森矩阵求解的过程中有一些近似，用到了阵列的对称性，详情可以参见参考文献的附录部分。其对应的二阶偏导数如下
+$$\frac{\partial^2 F}{\partial u^2}=2\mu_x^2 - 2\frac{\boldsymbol{d}_x^H\partial \boldsymbol{a}/\partial u}{\boldsymbol{w}^H\boldsymbol{a}} \tag{12}$$
+$$\frac{\partial^2 F}{\partial v^2}=2\mu_y^2 - 2\frac{\boldsymbol{d}_y^H\partial \boldsymbol{a}/\partial v}{\boldsymbol{w}^H\boldsymbol{a}} \tag{13}$$
+$$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\partial \boldsymbol{a}/\partial v]}{\boldsymbol{w}^H\boldsymbol{a}} \tag{14}$$</p>
+<p>    利用式 \((9)\)-\((14)\)，我们就可以求出波达方向。</p>
+<h2 id="一个均匀线阵ula的例子">一个均匀线阵（ULA）的例子</h2>
+<p>    若考虑一个均匀线阵，阵元个数 \(M=8\)，信噪比 \(\text{SNR}=15\text{ dB}\)，快拍数 \(N=1000\)。若假设波束指向 \(\theta_0=20^\circ\)，信号的实际波达方向为 \(\theta=25^\circ\)。首先考虑无干扰的情况，求解过程选用小批量随机梯度下降法（MGBD），将 1000 个样本划分为 100 个 Batch。其迭代结果如下</p>
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/hopesAccount/Blog@master/Monopulse/Max_Likelihood/noJammer(MBGD).svg" alt="">
+</div>
+
+<p>    然后考虑干扰信号离波束指向较远的情况，若假设干扰信号位于 \(\theta_j=10^\circ\)，干噪比 \(\text{JNR}=55\text{ dB}\)，求解过程选用小批量随机梯度下降法（MGBD），将 1000 个样本划分为 100 个 Batch。其迭代结果如下</p>
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/hopesAccount/Blog@master/Monopulse/Max_Likelihood/jammer=10(MBGD).svg" alt="">
+</div>
+
+<p>    接着考虑干扰靠近波束指向时的情况，若假设干扰信号位于 \(\theta_j=18^\circ\)，干噪比 \(\text{JNR}=55\text{ dB}\)，求解过程选用小批量随机梯度下降法（MGBD），将 1000 个样本划分为 100 个 Batch。其迭代结果如下</p>
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/hopesAccount/Blog@master/Monopulse/Max_Likelihood/jammer=18(MBGD).svg" alt="">
+</div>
+
+<h2 id="结论">结论</h2>
+<p>    从这个均匀线阵的例子中我们可以看出，因为使用牛顿梯度法，该迭代过程收敛较快。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>U. Nickel, &ldquo;Monopulse estimation with adaptive arrays,&rdquo; in IEE Proceedings F - Radar and Signal Processing, vol. 140, no. 5, pp. 303-308, Oct. 1993.</p>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://hopesaccount.github.io/tags/%E5%8D%95%E8%84%89%E5%86%B2/">单脉冲</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hopesaccount.github.io/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 蒿蚝好昊. All Rights Reserved
+  </span>
+</footer>
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hopesaccount.github.io/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+          <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+          <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">蒿蚝好昊</h4>
+    
+      <div id="about-card-bio">蒿蚝好昊的<strong>胡扯</strong>频道</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        三流键客
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        成都
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    <div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/weiss.png');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hopesaccount.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/hopesaccount.github.io\/2020\/06\/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95\/';
+          
+            this.page.identifier = '\/2020\/06\/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'metaCoder';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
