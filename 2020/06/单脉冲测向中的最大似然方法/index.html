@@ -17,8 +17,8 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="单脉冲测向中的最大似然方法">
 <meta name="twitter:title" content="单脉冲测向中的最大似然方法">
-<meta property="og:url" content="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
-<meta property="twitter:url" content="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+<meta property="og:url" content="/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+<meta property="twitter:url" content="/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
 <meta property="og:site_name" content="蒿蚝好昊">
 <meta property="og:description" content="
     最大似然估计是一种常用的估计方法，其核心在于利用已有的观测样本建立起似然函数 \(\mathcal{L}(\theta)\)，然后求该似然函数的最大解，得到待估计参数 \(\hat{\theta}=\text{argmax} \mathcal{L}(\theta)\)。Nickel 在 1993 年将该方法应用到了单脉冲系统中，该方法的优势在于，不受限于具体的阵列形式，只要能够知道干扰叠加噪声的统计特性，就可以利用该方法进行求解。但同时，由于 Nickel 在原文中采用了牛顿梯度法进行求解，因此对于存在靠近波束指向的主瓣干扰时，估计偏差较大，详情可参见参考文献。">
@@ -63,12 +63,12 @@
 
     <title>单脉冲测向中的最大似然方法</title>
 
-    <link rel="icon" href="https://hopesaccount.github.io/favicon.png">
+    <link rel="icon" href="/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+    <link rel="canonical" href="/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -76,7 +76,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
     
     
-    <link rel="stylesheet" href="https://hopesaccount.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    <link rel="stylesheet" href="/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
     
     
 
@@ -91,12 +91,12 @@
       <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
-    <a class="header-title-link" href="https://hopesaccount.github.io/">蒿蚝好昊</a>
+    <a class="header-title-link" href="/">蒿蚝好昊</a>
   </div>
   
     
       <a class="header-right-picture "
-         href="https://hopesaccount.github.io/#about">
+         href="/#about">
     
     
     
@@ -112,7 +112,7 @@
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
-        <a href="https://hopesaccount.github.io/#about">
+        <a href="/#about">
           <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/metaCoder-00/Blog@master/Blog-cover/profile.jpeg" alt="作者的图片" />
         </a>
         <h4 class="sidebar-profile-name">蒿蚝好昊</h4>
@@ -125,7 +125,7 @@
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://hopesaccount.github.io/">
+      <a class="sidebar-button-link " href="/">
     
       <i class="sidebar-button-icon fa fa-lg fa-home"></i>
       
@@ -135,7 +135,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://hopesaccount.github.io/categories">
+      <a class="sidebar-button-link " href="/categories">
     
       <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
       
@@ -145,7 +145,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://hopesaccount.github.io/tags">
+      <a class="sidebar-button-link " href="/tags">
     
       <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
       
@@ -155,7 +155,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://hopesaccount.github.io/archives">
+      <a class="sidebar-button-link " href="/archives">
     
       <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
       
@@ -165,7 +165,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://hopesaccount.github.io/#about">
+      <a class="sidebar-button-link " href="/#about">
     
       <i class="sidebar-button-icon fa fa-lg fa-question"></i>
       
@@ -179,7 +179,7 @@
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://github.com/metaCoder-00" target="_blank" rel="noopener">
+      <a class="sidebar-button-link " href="/https://github.com/metaCoder-00">
     
       <i class="sidebar-button-icon fa fa-lg fa-github"></i>
       
@@ -230,7 +230,7 @@
   
     <span>发布在</span>
     
-      <a class="category-link" href="https://hopesaccount.github.io/categories/%e9%98%b5%e5%88%97%e4%bf%a1%e5%8f%b7%e5%a4%84%e7%90%86">阵列信号处理</a>
+      <a class="category-link" href="/categories/%e9%98%b5%e5%88%97%e4%bf%a1%e5%8f%b7%e5%a4%84%e7%90%86">阵列信号处理</a>
     
   
 
@@ -325,7 +325,7 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://hopesaccount.github.io/tags/%E5%8D%95%E8%84%89%E5%86%B2/">单脉冲</a>
+  <a class="tag tag--primary tag--small" href="/tags/%E5%8D%95%E8%84%89%E5%86%B2/">单脉冲</a>
 
                   </div>
                 
@@ -346,7 +346,7 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://hopesaccount.github.io/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -364,19 +364,19 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -437,7 +437,7 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://hopesaccount.github.io/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/06/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E4%BA%94/" data-tooltip="Nicoletto Giganti 系列翻译（五）">
               
                   <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
                   <i class="fa fa-angle-right"></i>
@@ -455,19 +455,19 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://hopesaccount.github.io/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/06/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -497,19 +497,19 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
           <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
           <i class="fa fa-twitter"></i><span>分享到 Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fhopesaccount.github.io%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2020%2F06%2F%25E5%258D%2595%25E8%2584%2589%25E5%2586%25B2%25E6%25B5%258B%25E5%2590%2591%25E4%25B8%25AD%25E7%259A%2584%25E6%259C%2580%25E5%25A4%25A7%25E4%25BC%25BC%25E7%2584%25B6%25E6%2596%25B9%25E6%25B3%2595%2F">
           <i class="fa fa-google-plus"></i><span>分享到 Google&#43;</span>
         </a>
       </li>
@@ -564,7 +564,7 @@ $$\frac{\partial^2 F}{\partial uv}=2\mu_x\mu_y - 2\frac{\Re[\boldsymbol{d}_x^H\p
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
 
 
-<script src="https://hopesaccount.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+<script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
 
 <script lang="javascript">
@@ -599,7 +599,7 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/hopesaccount.github.io\/2020\/06\/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95\/';
+          this.page.url = '\/2020\/06\/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95\/';
           
             this.page.identifier = '\/2020\/06\/%E5%8D%95%E8%84%89%E5%86%B2%E6%B5%8B%E5%90%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E6%96%B9%E6%B3%95\/'
           
