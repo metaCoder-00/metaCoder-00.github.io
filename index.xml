@@ -6,10 +6,16 @@
     <description>Recent content on 蒿蚝好昊</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 05 Jun 2020 20:14:05 +0800</lastBuildDate>
-    
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Mon, 28 Sep 2020 10:41:53 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nicoletto Giganti 系列翻译（六）</title>
+      <link>/2020/09/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E5%85%AD/</link>
+      <pubDate>Mon, 28 Sep 2020 10:41:53 +0800</pubDate>
+      
+      <guid>/2020/09/nicoletto-giganti-%E7%B3%BB%E5%88%97%E7%BF%BB%E8%AF%91%E5%85%AD/</guid>
+      <description>&lt;h2 id=&#34;当对方发动斩击时用单剑进攻的正确方式&#34;&gt;当对方发动斩击时，用单剑进攻的正确方式&lt;/h2&gt;
+&lt;p&gt;    从图中你会注意到，在对方发动一个高位斩击斩向你头部的同时，发动一个 stoccata（上升刺）刺向对方面部；当对方举起剑（准备发动一个斩击）时，你可以用 stoccata 进攻对方，此时对方的剑还在空中，你将会先击中对方。注意这个操作时如何完成的。无论你处于什么架势，首先上前和对方交剑（Bind），当进入距离时，若对方发动一个斩击斩向你的头部，在对方抬剑的同时，向前刺向对方面部。通过上述操作，毫无疑问你将会在对方的剑还在空中的时候就刺中他，如图例（Plate 12）中所示；刺击的同时应当将脉搏侧向内上方转，使剑身的右侧朝上（译者注：这里结合脉搏侧的运动和 plate 来看，应当是手上形成第四架势，正刃朝内，反刃朝外；而后一句的剑身右侧朝上尚且不明白是什么意思），然后伸展持剑手，同时保证一定的高度，（护手）放在自己面前，使得护手能够掩住你的头部，当对方剑落下时，无法攻击到你；因此，快速机敏的刺出剑尖是比较有效的；如果不够快，对方可能会防御，并且能够进攻到你；刺击完成后，迅速向后退到距离之外，同时保持剑对对方的威胁。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>单脉冲测向中的最大似然方法</title>
