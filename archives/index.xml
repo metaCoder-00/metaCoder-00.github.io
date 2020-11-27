@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Archives on 蒿蚝好昊</title>
-    <link>/archives/</link>
+    <link>baseURL/archives/</link>
     <description>Recent content in Archives on 蒿蚝好昊</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language><atom:link href="/archives/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-cn</language><atom:link href="baseURL/archives/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
